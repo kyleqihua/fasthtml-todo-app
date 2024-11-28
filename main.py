@@ -10,9 +10,12 @@ def render(todo):
     delete = A("Delete ", hx_delete=f"/{todo.id}", hx_swap="outerHTML", target_id=html_id)
     return Li(toggle, delete, todo.title + ("✅" if todo.done else ""), id=html_id) 
 
+# 添加环境变量判断
+is_vercel = os.environ.get('VERCEL') == '1'
+
 # 因为在 fast_app 中指定了 render 函数，所以 todos 中的数据会自动调用 render 函数
 # to deploy, it should be "data/todos.db", live=False
-app, rt, todos, Todo = fast_app("todos.db", live=True, render=render, id=int, title=str, done=bool, pk="id")
+app, rt, todos, Todo = fast_app("data/todos.db" if is_vercel else "todos.db", live=False, render=render, id=int, title=str, done=bool, pk="id")
 
 def mk_input(): return Input(placeholder="Add a todo", id="title", hx_swap_oob="true")
 
