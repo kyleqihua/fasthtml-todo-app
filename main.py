@@ -1,5 +1,6 @@
 # type: ignore 
 from fasthtml.common import *
+import os 
 
 # when the user click the toggle, the htmx sends a get request to f"/toggle/{todo.id}", and the server will do the staff and send back the updated response 
 def render(todo):
@@ -12,10 +13,11 @@ def render(todo):
 
 # 添加环境变量判断
 is_vercel = os.environ.get('VERCEL') == '1'
+db_path = "/tmp/todos.db" if is_vercel else "todos.db"
 
 # 因为在 fast_app 中指定了 render 函数，所以 todos 中的数据会自动调用 render 函数
 # to deploy, it should be "data/todos.db", live=False
-app, rt, todos, Todo = fast_app("data/todos.db" if is_vercel else "todos.db", live=False, render=render, id=int, title=str, done=bool, pk="id")
+app, rt, todos, Todo = fast_app(db_path, live=False, render=render, id=int, title=str, done=bool, pk="id")
 
 def mk_input(): return Input(placeholder="Add a todo", id="title", hx_swap_oob="true")
 
