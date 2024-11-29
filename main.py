@@ -11,7 +11,10 @@ def render(todo):
     delete = A("Delete ", hx_delete=f"/{todo.id}", hx_swap="outerHTML", target_id=html_id)
     return Li(toggle, delete, todo.title + ("✅" if todo.done else ""), id=html_id) 
 
+# steps to deploy on vercel:
+# import os 
 # 添加环境变量判断
+# turn off live 
 is_vercel = os.environ.get('VERCEL') == '1'
 db_path = "/tmp/todos.db" if is_vercel else "todos.db"
 
